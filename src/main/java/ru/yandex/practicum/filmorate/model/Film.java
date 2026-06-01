@@ -2,11 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 
-
-/**
- * Film.
- */
-
 @Data
 public class Film {
 
