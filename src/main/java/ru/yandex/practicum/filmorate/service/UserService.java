@@ -43,7 +43,6 @@ public class UserService {
         userStorage.deleteUser(id);
     }
 
-    // Добавить в друзья
     public void addFriend(int userId, int friendId) {
         log.debug("Попытка добавить в друзья: пользователь id={}, друг id={}", userId, friendId);
 
@@ -55,13 +54,17 @@ public class UserService {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
+        if (user.getFriends().contains(friendId)) {
+            log.warn("Пользователи уже являются друзьями: {} и {}", userId, friendId);
+            throw new ValidationException("Пользователи уже являются друзьями");
+        }
+
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
 
         log.info("Пользователи добавлены в друзья: {} <-> {}", userId, friendId);
     }
 
-    // Удалить из друзей
     public void removeFriend(int userId, int friendId) {
         log.debug("Попытка удалить из друзей: пользователь id={}, друг id={}", userId, friendId);
 
@@ -79,7 +82,6 @@ public class UserService {
         log.info("Пользователи удалены из друзей: {} <-> {}", userId, friendId);
     }
 
-    // Получить список друзей
     public Collection<User> getFriends(int userId) {
         log.debug("Запрос списка друзей для пользователя id={}", userId);
 
@@ -91,7 +93,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    // Получить общих друзей
     public Collection<User> getCommonFriends(int userId, int otherId) {
         log.debug("Запрос общих друзей для пользователей id={} и id={}", userId, otherId);
 
