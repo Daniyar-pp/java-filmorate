@@ -76,6 +76,14 @@ public class UserService {
             throw new NotFoundException("Пользователь не является другом");
         }
 
+        if (!friend.getFriends().contains(userId)) {
+            log.warn("Ошибка: пользователь {} не является другом {}", friendId, userId);
+            // Восстанавливаем согласованность данных
+            user.getFriends().remove(friendId);
+            throw new NotFoundException("Пользователь не является другом");
+        }
+
+        // Удаляем друг друга из списков друзей
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
 
