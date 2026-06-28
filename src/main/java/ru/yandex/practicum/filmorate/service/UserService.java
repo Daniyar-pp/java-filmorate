@@ -83,9 +83,19 @@ public class UserService {
             throw new NotFoundException("Пользователь не является другом");
         }
 
-        // Удаляем друг друга из списков друзей
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        boolean removedFromUser = user.getFriends().remove(friendId);
+        boolean removedFromFriend = friend.getFriends().remove(userId);
+
+        if (!removedFromUser || !removedFromFriend) {
+            log.error("Ошибка: не удалось удалить из друзей {} и {}", userId, friendId);
+            // Восстанавливаем согласованность, если удаление прошло частично
+            if (removedFromUser && !removedFromFriend) {
+                user.getFriends().add(friendId);
+            } else if (!removedFromUser && removedFromFriend) {
+                friend.getFriends().add(userId);
+            }
+            throw new RuntimeException("Не удалось удалить из друзей");
+        }
 
         log.info("Пользователи удалены из друзей: {} <-> {}", userId, friendId);
     }
