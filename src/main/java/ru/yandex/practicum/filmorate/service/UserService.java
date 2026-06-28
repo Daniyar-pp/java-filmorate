@@ -76,7 +76,6 @@ public class UserService {
 
     public void removeFriend(int userId, int friendId) {
         log.debug("Попытка удалить из друзей: пользователь id={}, друг id={}", userId, friendId);
-        
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
