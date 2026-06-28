@@ -49,28 +49,28 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    // PUT /users/{id}/friends/{friendId} - добавить в друзья
+
     @PutMapping("/{id}/friends/{friendId}")
     public void addFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Запрос на добавление в друзья: пользователь id={}, друг id={}", id, friendId);
         userService.addFriend(id, friendId);
     }
 
-    // DELETE /users/{id}/friends/{friendId} - удалить из друзей
+
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
         log.info("Запрос на удаление из друзей: пользователь id={}, друг id={}", id, friendId);
         userService.removeFriend(id, friendId);
     }
 
-    // GET /users/{id}/friends - список друзей
+
     @GetMapping("/{id}/friends")
     public Collection<User> getFriends(@PathVariable int id) {
         log.info("Запрос на получение списка друзей пользователя id={}", id);
         return userService.getFriends(id);
     }
 
-    // GET /users/{id}/friends/common/{otherId} - общие друзья
+
     @GetMapping("/{id}/friends/common/{otherId}")
     public Collection<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
         log.info("Запрос на получение общих друзей пользователей id={} и id={}", id, otherId);

@@ -50,21 +50,19 @@ public class FilmController {
         filmService.deleteFilm(id);
     }
 
-    // PUT /films/{id}/like/{userId} - поставить лайк
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Запрос на добавление лайка: фильм id={}, пользователь id={}", id, userId);
         filmService.addLike(id, userId);
     }
 
-    // DELETE /films/{id}/like/{userId} - удалить лайк
+
     @DeleteMapping("/{id}/like/{userId}")
     public void removeLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Запрос на удаление лайка: фильм id={}, пользователь id={}", id, userId);
         filmService.removeLike(id, userId);
     }
 
-    // GET /films/popular?count={count} - популярные фильмы
     @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
         log.info("Запрос на получение {} популярных фильмов", count);
