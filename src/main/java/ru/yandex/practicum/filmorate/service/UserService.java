@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,14 @@ public class UserService {
         User user = getUserById(userId);
         User friend = getUserById(friendId);
 
+        // Инициализируем списки, если null
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
+        }
+        if (friend.getFriends() == null) {
+            friend.setFriends(new HashSet<>());
+        }
+
         if (user.getFriends().contains(friendId)) {
             log.warn("Пользователи уже являются друзьями: {} и {}", userId, friendId);
             throw new ValidationException("Пользователи уже являются друзьями");
@@ -67,19 +76,29 @@ public class UserService {
 
     public void removeFriend(int userId, int friendId) {
         log.debug("Попытка удалить из друзей: пользователь id={}, друг id={}", userId, friendId);
+        
         User user = getUserById(userId);
         User friend = getUserById(friendId);
+
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
+        }
+        if (friend.getFriends() == null) {
+            friend.setFriends(new HashSet<>());
+        }
 
         if (!user.getFriends().contains(friendId)) {
             log.warn("Ошибка: пользователь {} не является другом {}", userId, friendId);
             throw new NotFoundException("Пользователь не является другом");
         }
 
+
         if (!friend.getFriends().contains(userId)) {
             log.warn("Ошибка: пользователь {} не является другом {}", friendId, userId);
             user.getFriends().remove(friendId);
             throw new NotFoundException("Пользователь не является другом");
         }
+
 
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
@@ -91,6 +110,9 @@ public class UserService {
         log.debug("Запрос списка друзей для пользователя id={}", userId);
 
         User user = getUserById(userId);
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
+        }
 
         return user.getFriends().stream()
                 .map(id -> userStorage.getUserById(id)
@@ -103,6 +125,13 @@ public class UserService {
 
         User user = getUserById(userId);
         User other = getUserById(otherId);
+
+        if (user.getFriends() == null) {
+            user.setFriends(new HashSet<>());
+        }
+        if (other.getFriends() == null) {
+            other.setFriends(new HashSet<>());
+        }
 
         Set<Integer> commonFriendIds = user.getFriends().stream()
                 .filter(other.getFriends()::contains)
