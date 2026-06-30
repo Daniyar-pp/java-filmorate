@@ -86,17 +86,6 @@ public class UserService {
             friend.setFriends(new HashSet<>());
         }
 
-        if (!user.getFriends().contains(friendId)) {
-            log.warn("Ошибка: пользователь {} не является другом {}", userId, friendId);
-            throw new NotFoundException("Пользователь не является другом");
-        }
-
-
-        if (!friend.getFriends().contains(userId)) {
-            log.warn("Ошибка: пользователь {} не является другом {}", friendId, userId);
-            user.getFriends().remove(friendId);
-            throw new NotFoundException("Пользователь не является другом");
-        }
 
 
         user.getFriends().remove(friendId);
